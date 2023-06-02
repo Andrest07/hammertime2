@@ -30,8 +30,8 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.hammertime.hammertime2.domain.client.Client;
-import com.hammertime.hammertime2.domain.client.ClientRepository;
+import com.hammertime.hammertime2.domain.professional.Professional;
+import com.hammertime.hammertime2.domain.professional.ProfessionalRepository;
 import com.hammertime.hammertime2.service.IBackendService;
 
 @ActiveProfiles("test")
@@ -43,7 +43,7 @@ import com.hammertime.hammertime2.service.IBackendService;
 @EnableAutoConfiguration
 @TestPropertySource(locations = "classpath:application-integrationtest.properties")
 @AutoConfigureTestDatabase
-public class ClientRestControllerIntegrationTest {
+public class ProfessionalRestControllerIntegrationTest {
 
     @Autowired
 	  IBackendService backendService;
@@ -52,7 +52,7 @@ public class ClientRestControllerIntegrationTest {
     private MockMvc mvc;
 
     @Autowired
-    private ClientRepository repository;
+    private ProfessionalRepository repository;
 
     @After
     public void resetDb() {
@@ -61,12 +61,12 @@ public class ClientRestControllerIntegrationTest {
 
     // Integration test. Check if status is ok, that content is in JSON and if the first object has fname of Test1 and second object has fname of Test2
     @Test
-    public void givenClients_whenGetClients_thenStatus200() throws Exception {
-        createTestClient("Test1", "Test1", "Test1", "Test1", "Test1", "Test1");
-        createTestClient("Test2", "Test2", "Test2", "Test2", "Test2", "Test2");
+    public void givenProfessionals_whenGetProfessionals_thenStatus200() throws Exception {
+        createTestProfessional("Test1", "Test1","Test1", "Test1", "Test1", "Test1", "Test1");
+        createTestProfessional("Test2", "Test2","Test2", "Test2", "Test2", "Test2", "Test2");
 
         // @formatter:off
-        mvc.perform(get("/dataRequest/clients").contentType(MediaType.APPLICATION_JSON))
+        mvc.perform(get("/dataRequest/professionals").contentType(MediaType.APPLICATION_JSON))
           .andDo(print())
           .andExpect(status().isOk())
           .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -78,8 +78,8 @@ public class ClientRestControllerIntegrationTest {
 
     //
 
-    private void createTestClient(String firstName, String lastName, String address, String phone, String email, String password) {
-        Client cli = new Client(firstName, lastName, address, phone, email, password);
-        repository.saveAndFlush(cli);
+    private void createTestProfessional(String firstName, String lastName, String businessName, String address, String phone, String email, String password) {
+        Professional pro = new Professional(firstName, lastName, businessName, address, phone, email, password);
+        repository.saveAndFlush(pro);
     }
 }

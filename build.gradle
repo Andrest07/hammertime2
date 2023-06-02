@@ -49,6 +49,8 @@ dependencies {
 	testImplementation 'junit:junit:4.13.2'
 
 	testImplementation 'org.hamcrest:hamcrest:2.2'
+
+	implementation 'net.pwall.json:jsonutil:5.0'
 }
 
 tasks.named('test') {
