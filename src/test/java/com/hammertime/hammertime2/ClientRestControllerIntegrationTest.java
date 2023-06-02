@@ -11,6 +11,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -23,15 +24,14 @@ import com.hammertime.hammertime2.domain.client.Client;
 import com.hammertime.hammertime2.domain.client.ClientRepository;
 import com.hammertime.hammertime2.service.IBackendService;
 
-@EnableAutoConfiguration
-
 @RunWith(SpringRunner.class)
 @SpringBootTest(
   webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT,
-  classes = Hammertime2ApplicationTests.class)
+  classes = Hammertime2Application.class)
 @AutoConfigureMockMvc
-@TestPropertySource(
-  locations = "classpath:application-integrationtest.properties")
+@EnableAutoConfiguration
+@TestPropertySource(locations = "classpath:application-integrationtest.properties")
+@AutoConfigureTestDatabase
 public class ClientRestControllerIntegrationTest {
 
     @Autowired
@@ -48,7 +48,7 @@ public class ClientRestControllerIntegrationTest {
         repository.deleteAll();
     }
 
-    // Integration Test. Check if status is ok, that content is in JSON and if the first object has fname of Test1 and second object has fname of Test2
+    // Integration test. Check if status is ok, that content is in JSON and if the first object has fname of Test1 and second object has fname of Test2
     @Test
     @WithMockUser(username="admin",roles="ADMIN")
     public void getAllClientsAPI() throws Exception {
