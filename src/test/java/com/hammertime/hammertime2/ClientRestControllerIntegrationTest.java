@@ -48,31 +48,16 @@ public class ClientRestControllerIntegrationTest {
         repository.deleteAll();
     }
 
-    // Create client and then get client. Check if status is ok, that content is in JSON and if the first object has fname of Test
-    @Test
-    @WithMockUser(username="admin",roles="ADMIN")
-    public void getAllClientAPI() throws Exception {
-      backendService.createClient(new Client("Test", "Test", "Test", "Test", "Test", "Test"));
-      mvc.perform(get("/dataRequest/clients")
-      .contentType(MediaType.APPLICATION_JSON))
-      .andExpect(status().isOk())
-      .andExpect(content()
-      .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-      .andExpect(jsonPath("$[0].fname", Matchers.is("Test")));
-    }
-
-    // Create clients and then get clients. Check if status is ok, that content is in JSON and if the first object has fname of Test1 and second object has fname of Test2
+    // Integration Test. Check if status is ok, that content is in JSON and if the first object has fname of Test1 and second object has fname of Test2
     @Test
     @WithMockUser(username="admin",roles="ADMIN")
     public void getAllClientsAPI() throws Exception {
-      backendService.createClient(new Client("Test1", "Test", "Test", "Test", "Test", "Test"));
-      backendService.createClient(new Client("Test2", "Test", "Test", "Test", "Test", "Test"));
       mvc.perform(get("/dataRequest/clients")
       .contentType(MediaType.APPLICATION_JSON))
       .andExpect(status().isOk())
       .andExpect(content()
       .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-      .andExpect(jsonPath("$[0].fname", Matchers.is("Test1")))
-      .andExpect(jsonPath("$[1].fname", Matchers.is("Test2")));
+      .andExpect(jsonPath("$[0].fname", Matchers.is("Demo")))
+      .andExpect(jsonPath("$[1].fname", Matchers.is("Andreas")));
     } 
 }
