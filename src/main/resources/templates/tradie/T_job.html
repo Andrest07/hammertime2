@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+    <head>
+        <link rel="icon" type="image/x-icon" href="/static/logoWhite.png">
+        <title id="myTitle">Hello World!</title>
+
+	    <link rel="stylesheet" type="text/css" href="/static/style.css">
+
+        <script type="text/javascript">
+            const url = new URL(window.location.href);
+            const queryString = url.search.substr(1); // remove the '?' character
+            const params = queryString.split("&");
+            let jobId;
+            for (let i = 0; i < params.length; i++) {
+                const param = params[i].split("=");
+                if (param[0] === "jobId") {
+                    jobId = param[1];
+                    break;
+                }
+            }
+
+            function getDBRequest(requestPath, responseMethod){
+                var xhr = new XMLHttpRequest();
+                xhr.open('GET', 'http://localhost:8080/dataRequest/' + requestPath);
+                xhr.responseType = 'text';
+
+                xhr.onload = function() {
+                    if (xhr.status === 200) {
+                        var data = xhr.response;
+                        let jsonData = JSON.parse(data);
+                        
+                        // User chosen Method
+                        responseMethod(jsonData);
+                    }
+                }
+                // Send Request To Database
+                xhr.send();
+            }
+
+            function sendReq(){
+                var xhr = new XMLHttpRequest();
+                                xhr.open(
+
+                                    "PUT",
+                                    "http://localhost:8080/dataRequest/job/" +
+                                    jobJSON.id +
+                                    "/professional/" +
+                                    job.professionalId
+                                );
+
+                                xhr.responseType = "text";
+
+                                xhr.onload = function () {
+                                    if (xhr.status === 200) {
+                                    location.reload();
+                                    }
+                                };
+
+                                xhr.send();
+            }
+
+
+            // Function to use job data
+            function getJob(jobJson){
+                document.getElementById("jobTitle").innerHTML = jobJson.title;
+                document.getElementById("jobDescription").innerHTML = jobJson.description;
+                document.getElementById("jobCategory").innerHTML = "Category: " + jobJson.category;
+
+                document.getElementById("myTitle").innerHTML = jobJson.title;
+            }
+
+            getDBRequest("jobs/id/" + jobId, getJob);
+
+            function toggleSidebar() {
+                var sidebar = document.getElementById("sidebar");
+                sidebar.classList.toggle("open");
+            }
+
+
+            function validateInput(event) {
+                const input = event.target;
+                const value = input.value.trim();
+
+                if (value === '') {
+                    // Empty value, allow any input
+                    return;
+                }
+
+                const number = Number(value);
+
+                if (Number.isNaN(number) || number <= 0) {
+                    // Invalid input, clear the textarea
+                    input.value = '';
+                }
+            }
+            
+        </script>
+        <style>
+            #jobImage{
+                height:250pt;
+                width:250pt;
+                
+                margin:auto;
+                float:left;
+
+
+                background-image: url("/static/catCastlePlaceholder.png");
+                background-repeat: no-repeat;
+                background-size: 250pt 250pt;
+                
+                border-style: solid;
+                border-color: #3A6EA5;
+                border-radius: 10pt;
+            }
+            .standardContainer{
+                background-color: #EBEBEB; 
+                border-radius:10pt; 
+                margin:auto;
+                margin-top:260pt; 
+                padding: 20pt;
+                padding-top:5pt;
+                width:210pt; 
+                
+            }
+
+
+            #calDiv{
+                background-color: #EBEBEB;
+                border-radius: 10pt;
+                margin:auto;
+                float:right;
+
+                width: 250pt;
+                height: 250pt;
+                
+            }
+            #calHead{
+                height:40pt;
+                background-color: #3A6EA5;
+                color: white;
+                border-radius: 10pt 10pt 0 0;
+                margin:0;
+                justify-content: center;
+                
+            }
+            #calMonthTitle{
+                width:250pt;
+                text-align: center;
+                margin-top:0;
+                padding-top:13pt;
+            }
+            .calMBut{
+                color:white;
+                font-size: 15pt;
+                background:none;
+                border:none;
+                margin-left:15pt;
+                margin-right:15pt;
+                translate: 0 -4pt;
+            }
+            .calMBut:hover{
+                cursor: pointer;
+            }
+
+
+            #calTable{
+                width:250pt;
+                margin:0;
+                height: 190pt;
+                padding:15pt;
+                padding-top:5pt;
+                text-align: center;
+                top: 10px;
+            }
+
+
+            
+            .leftSel{
+                background-color: green;
+            }
+            .rightSel{
+                background-color: blue;
+            }
+            .betweenSel{
+                background-color: red;
+            }
+
+
+
+            td:hover{
+                background-color: #C0C0C0;
+                font-weight: bold;
+                border-radius:5pt;
+                color:white;
+            }
+            td.disabledTD{
+                color: #C0C0C0;
+            }
+            td.disabledTD:hover{
+                color: #C0C0C0;
+                background-color: #EBEBEB;
+            }
+
+            #priceText{
+                width: 50%;
+                height: 20px;
+                padding: 10px;
+                border-radius: 5px;
+                border: 1px solid #ccc;
+                box-sizing: border-box;
+                resize: none;
+            }
+            #date{
+                width: auto;
+                height: 20px;
+                border-radius: 5px;
+                border: 1px solid #ccc;
+                box-sizing: border-box;
+                resize: none;
+            }
+
+        </style>
+        
+    </head>
+    <body>
+        
+        <header>
+            <navButton onclick="toggleSidebar()">☰</navButton>
+            <div class="center">
+                <div class="logo">
+                    <img src="/static/logoWhite.png" alt="Logo" style="margin:0;padding-right:5pt;">
+                </div>
+                
+                <div class="title">
+                    <h1> Hammer Time</h1>
+                </div>
+            </div>
+            </div>
+        </header>
+
+        <div class="sidebar" id="sidebar">
+            <a th:href="@{/tradie/home}">Home</a>
+            <a th:href="@{/tradie/account}">Account info</a>
+                <a th:href="@{/tradie/subscription}">Subscription</a>
+                <a th:href="@{/main}">Sign out</a>
+          </div>
+
+        <div class="content" style="padding-top: 80pt;">
+            <h1 id="jobTitle">Hello world!</h1>
+            <div style="margin:auto; float:left; padding:0;">
+                <div id="jobImage"></div>
+
+                <div class="standardContainer">
+                    <h3 style="padding-top:10pt;">Job Description</h3>
+                    <div style="background-color: white; border-radius:3pt; padding: 5pt; padding-top:4pt;">
+                        <p id="jobDescription"></p>
+                    </div>
+                    <h3 style="padding-top:10pt;">Job Category</h3>
+                    <div style="background-color: white; border-radius:3pt; padding: 5pt; padding-top:4pt;">
+                        <p id="jobCategory"></p>
+                    </div>
+                    
+                    
+                </div>
+            </div>
+            
+            <div id="calDiv" style="padding: 1em; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 200pt;">
+                <div style="margin-top: -80px;">
+                    <h2 style="margin: 0;">Job Submission Form</h2>
+                </div>
+                <form action="/tradie/home" style="margin-top: 1em; text-align: center;">
+                    <div style="display: flex; align-items: center; margin-bottom: 10px; margin-top: 30px;">
+                        <span id="price">Quote price:</span>
+                        <input type="text" id="priceText" name="price" oninput="validateInput(event)"> 
+                    </div>
+                    <label for="date">Date:</label>
+                    <input type="date" id="date" name="date" style="margin-bottom: 40px;">
+                    <br>
+                    <input class="buttons" type="submit" value="Submit Form">
+                </form>
+            </div>
+            
+            <!-- <div id="calDiv">
+                <div id="calHead">
+                    
+                    <p id="calMonthTitle">
+                        <button id="reduceMonth" class="calMBut" style="float:left;"><</button>
+                        December 2023
+                        <button id="increaseMonth" class="calMBut" style="float:right;">></button>
+                    </p>
+                    
+                </div>
+
+                <table id="calTable">
+                    <tr>
+                        <th>Sun</th>
+                        <th>Mon</th>
+                        <th>Tue</th>
+                        <th>Wed</th>
+                        <th>Thu</th>
+                        <th>Fri</th>
+                        <th>Sat</th>
+                    </tr>
+                    <tr>
+                        <td class="disabledTD">29</td>
+                        <td class="disabledTD">30</td>
+                        <td>1</td>
+                        <td>2</td>
+                        <td>3</td>
+                        <td>4</td>
+                        <td>5</td>
+                    </tr>
+                    <tr>
+                        <td>6</td>
+                        <td>7</td>
+                        <td>8</td>
+                        <td>9</td>
+                        <td>10</td>
+                        <td>11</td>
+                        <td>12</td>
+                    </tr>
+                    <tr>
+                        <td>13</td>
+                        <td>14</td>
+                        <td>15</td>
+                        <td>16</td>
+                        <td>17</td>
+                        <td>18</td>
+                        <td>19</td>
+                    </tr>
+                    <tr>
+                        <td>20</td>
+                        <td>21</td>
+                        <td>22</td>
+                        <td>23</td>
+                        <td>24</td>
+                        <td>25</td>
+                        <td>26</td>
+                    </tr>
+                    <tr>
+                        <td>27</td>
+                        <td>28</td>
+                        <td>29</td>
+                        <td>30</td>
+                        <td>31</td>
+                        <td class="disabledTD">1</td>
+                        <td class="disabledTD">2</td>
+                    </tr>
+                </table>
+            </div> -->
+            
+        </div>
+    </body>
+</html>

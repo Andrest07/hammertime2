@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+  <head>
+    <link rel="stylesheet" type="text/css" href="/static/style.css">
+
+    <meta charset="UTF-8">
+    
+    <script>
+    	const map = {
+            "tradieD": "tradieDiv",
+            "clientD": "clientDiv"
+          };
+          
+          function prodType(value) {
+          	if(map[value] == "tradieDiv"){
+            	document.getElementById("email-label").innerHTML="Business Email:";
+                document.getElementById("address-label").innerHTML="Business Address:";
+                document.getElementById("phone-label").innerHTML="Business Phone Number:";
+            }else {
+            	document.getElementById("email-label").innerHTML="Email:";
+                document.getElementById("address-label").innerHTML="Address:";
+                document.getElementById("phone-label").innerHTML="Phone Number";
+            }
+
+            document
+              .querySelectorAll(".fieldbox")
+              .forEach((node) => (node.style.display = "none"));
+            document.getElementById(map[value]).style.display = "block";
+          }
+          
+		   function onChange() {
+            const password = document.querySelector('input[name=password]');
+            const confirm = document.querySelector('input[name=confirm]');
+            if (confirm.value === password.value) {
+              confirm.setCustomValidity('');
+            } else {
+              confirm.setCustomValidity('Passwords do not match');
+            }
+          }
+
+    </script>
+    
+    <title>Signup Page</title>
+    <!-- <link rel="stylesheet" type="text/css" href="/static/style.css"> <-->
+    
+    <style>
+      
+      div.fieldbox {
+        display: none;
+      }
+      
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f2f2f2;
+      }
+      form {
+        background-color: #fff;
+        border-radius: 10px;
+        padding: 20px;
+        width: 500px;
+        margin: 50px auto;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+      }
+      label {
+        display: block;
+        margin-bottom: 10px;
+      }
+      input[type="text"],
+      input[type="email"],
+      input[type="password"] {
+        width: 100%;
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        margin-bottom: 20px;
+        box-sizing: border-box;
+      }
+      /* input[type="submit"] {
+        background-color: #ff6700;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      input[type="submit"]:hover {
+        background-color: #3e8e41;
+      } */
+      /* Responsive Styles */
+      @media (max-width: 600px) {
+        form {
+          width: 90%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+
+    <header>
+      <div class="center">
+          <div class="logo">
+            <img src="/static/logoPH.png" alt="Logo">
+          </div>
+              
+          <div class="title">
+              <h1>Hammer Time</h1>
+          </div>
+      </div>
+	  </header>
+    
+    <main>
+      <div class="content">
+        <form th:action="@{/dataRequest/signup}" method="post">
+          <h1 style="text-align:center">Sign Up</h1>
+          <p> Are you a:</p>
+          
+            <div>
+            <label for="tradie">
+              <input type="radio" id="tradie" name="user-type" value="tradieD" required onChange="prodType(this.value);" style="text-align:center"> Tradie
+            </label>
+            
+            <label for="client">
+              <input type="radio" id="client" name="user-type" value="clientD" required onChange="prodType(this.value);" style="text-align:center" checked="checked"> Client
+            </label>
+            </div>
+
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+            
+            <label for="surname">Surname:</label>
+            <input type="text" id="surname" name="surname" required>
+            
+            <div class="fieldbox" id="tradieDiv">
+            <label for="business-name">Business Name:</label>
+            <input type="text" id="business-name" name="business-name">
+            </div>
+            
+            <label for="email" id="email-label">Email:</label>
+            <input type="email" id="email" name="email" required>
+            
+            <label for="address" id="address-label">Address:</label>
+            <input type="text" id="address" name="address" required>
+            
+            <label for="phone" id="phone-label">Phone Number:</label>
+            <input type="text" id="phone" name="phone" required>
+        
+            <form>
+            <label>Password: <input name="password" type="password" onChange="onChange()" /> </label>
+            <label>Confirm: <input name="confirm"  type="password" onChange="onChange()" /> </label>
+            <label for="accept-terms">
+            <input type="checkbox" id="accept-terms" name="accept-terms" required> 
+            I accept the
+            <a href="\static\Terms & Condition.pdf" target="_blank">terms and conditions</a>
+            </label>
+            <!-- <input type="submit" value="Sign Up"> -->
+            <a th:href="@{/login}"><button class="buttons">Sign Up</button></a>
+        </form>
+      </div>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<head>
+	<title>Request Status</title>
+	<link rel="stylesheet" type="text/css" href="/static/style.css">
+
+    <script>
+        // -- Checks what job this page is querying
+        const url = new URL(window.location.href);
+        const queryString = url.search.substr(1); // remove the '?' character
+        const params = queryString.split("&");
+        let jobId;
+        for (let i = 0; i < params.length; i++) {
+            const param = params[i].split("=");
+            if (param[0] === "jobId") {
+                jobId = param[1];
+                break;
+            }
+        }
+
+        // Standard request function
+        function getDBRequest(requestPath, responseMethod){
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', 'http://localhost:8080/dataRequest/' + requestPath);
+            xhr.responseType = 'text';
+
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    var data = xhr.response;
+                    let jsonData = JSON.parse(data);
+                    
+                    // User chosen Method
+                    responseMethod(jsonData);
+                }
+            }
+            // Send Request To Database
+            xhr.send();
+        }
+
+        var myProfs
+        var jobJSON;
+        var userID;
+
+        function fillPage(jobApplications){
+            const progressBar = document.getElementById('progressBar');
+            const statusText = document.getElementById('status');
+                
+            let status = jobJSON.status;
+
+            switch (status) {
+                case "PENDING":
+                    
+                    progressBar.value = 1;
+                    statusText.innerHTML = "Request Pending";
+
+                    //var allApps = `<table id="tradiesTable">`;
+
+                    const myTable = document.createElement("table");
+                    myTable.setAttribute('id', 'tradiesTable');
+
+                    for(let i = 0; i < jobApplications.length; i++) {
+                        let job = jobApplications[i];
+                    
+                        if(job.jobId == jobJSON.id){
+
+                            var professional;
+
+                            for(let m = 0; m < myProfs.length; m++){
+                                //alert(JSON.stringify(job));
+                                //alert(JSON.stringify(myProfs[m]));
+                                if(myProfs[m].id == job.professionalId){
+                                    
+                                    professional = myProfs[m];
+                                }
+                            }
+
+
+                            
+
+                            const quoteRow = document.createElement("tr");
+
+                            const logoCell = document.createElement("td");
+                            const logoImg = document.createElement("img");
+                            logoImg.src = "/static/logoPH.png";
+                            logoImg.width = "50";
+                            logoImg.height = "50";
+                            logoCell.appendChild(logoImg);
+
+                            const professionalCell = document.createElement("td");
+                            const starsParagraph = document.createElement("p");
+                            starsParagraph.id = "stars";
+                            starsParagraph.textContent = professional.fname;
+                            const priceParagraph = document.createElement("p");
+                            priceParagraph.id = "price";
+                            priceParagraph.textContent = `$${job.quotedAmount}`;
+                            professionalCell.appendChild(starsParagraph);
+                            professionalCell.appendChild(priceParagraph);
+
+                            const buttonCell = document.createElement("td");
+                            const quoteButton = document.createElement("button");
+                            quoteButton.innerHTML = "Select";
+                            quoteButton.setAttribute("class", "buttons");
+
+                            quoteButton.addEventListener("click", function (event) {
+
+                                // Prevent the default link behavior
+                                event.preventDefault();
+
+                                var xhr = new XMLHttpRequest();
+                                xhr.open(
+
+                                    "PUT",
+                                    "http://localhost:8080/dataRequest/job/" +
+                                    jobJSON.id +
+                                    "/professional/" +
+                                    professional.id
+                                );
+
+                                xhr.responseType = "text";
+
+                                xhr.onload = function () {
+                                    if (xhr.status === 200) {
+                                    location.reload();
+                                    }
+                                };
+
+                                xhr.send();
+                            });
+
+                            buttonCell.appendChild(quoteButton);
+
+                            quoteRow.appendChild(logoCell);
+                            quoteRow.appendChild(professionalCell);
+                            quoteRow.appendChild(buttonCell);
+
+                            myTable.appendChild(quoteRow);
+
+
+                        }
+                        
+                    }
+
+                    document.getElementById("dynamicCont").appendChild(myTable);
+
+                    break;
+                    
+                case "ACCEPTED":
+                    progressBar.value = 50;
+                    statusText.innerHTML = "Request Confirmed";
+
+
+                    for(let i = 0; i < jobApplications.length; i++) {
+                        let job = jobApplications[i];
+                    
+                        if(job.jobId == jobJSON.id){
+
+                            var professional;
+
+                            for(let m = 0; m < myProfs.length; m++){
+                                if(myProfs[m].id == jobJSON.professionalId){
+                                    professional = myProfs[m];
+
+                                    document.getElementById("dynamicCont").innerHTML = `<div>
+                                        <h1>Tradie Information</h1>
+                                            <h5>Order Confirmed for April 20, 2023</h5>
+                                        </div>
+                                        <table>
+                                            <tr>
+                                                <td style="vertical-align: text-top;"><img src="/static/logoPH.png" height="70px" width="70px"></td>
+                                                <td>
+                                                    <div class="tradie-info">
+                                                        <div class="tradie-info-box">
+                                                            <h3>Tradie Business Name</h3>
+                                                            <p class="info">${professional.businessName}</p>
+                                                        </div>
+                                                        <div class="tradie-info-box">
+                                                            <h3>Tradie Name</h3>
+                                                            <p class="info">${professional.fname} ${professional.lname}</p>
+                                                        </div>
+                                                        <div class="tradie-info-box">
+                                                            <h3>Tradie Contact Number</h3>
+                                                            <p class="info">${professional.phone}</p>
+                                                        </div>
+                                                        <div class="tradie-info-box">
+                                                            <h3>Tradie Email</h3>
+                                                            <p class="info">${professional.email}</p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </table>`;
+                                        break;
+                                }
+                            }
+
+                        }
+
+
+                        
+                    }
+
+                    break;
+
+                case "COMPLETE":
+                    progressBar.value = 100;
+                    statusText.innerHTML = "Request Completed";
+                    break;
+
+                default:
+                    console.error("Invalid status");
+            }
+        }
+
+
+        function runEssentialsPostAuth(jJSON){
+            jobJSON = jJSON;
+            if (userID == jobJSON.clientId){
+                // Everything to run the program
+
+                getDBRequest("jobApplications", fillPage);
+            }
+        }
+
+        // Run for user x
+        function authoriseUser(uID){
+            userID = uID; 
+            getDBRequest("jobs/id/" + jobId, runEssentialsPostAuth);
+        }
+
+        
+
+        function checkAfterProfessionalsLoaded(profs){
+            myProfs = profs;
+            getDBRequest("who", authoriseUser);
+        }
+
+        getDBRequest("professionals", checkAfterProfessionalsLoaded);
+        
+
+
+        function toggleSidebar() {
+            var sidebar = document.getElementById("sidebar");
+            sidebar.classList.toggle("open");
+        }
+    </script>
+    <style>
+        select {
+            color: grey;
+            background-color: white;
+            border-radius: 5px;
+            padding: 5px;
+            }
+
+        select:hover {
+            cursor: pointer;
+            background-color: #fff;
+            }
+
+        select option {
+            color: #C0C0C0;
+            /* background-color: #C0C0C0; */
+            }
+
+        select option:hover {
+            background-color: #C0C0C0;
+            color: white;
+            }
+
+        /* select option:hover {
+            box-shadow: 0 0 10px 100px #C0C0C0 inset;
+            color:white;
+            }
+        select option:checked{
+            box-shadow: 0 0 10px 100px #C0C0C0 inset;
+            } */
+
+        #name{
+            font-size: 20px;
+            color: #FF6700;
+            font-weight: 900;
+        }
+        #stars, #price{
+            color: #004E98;
+            font-weight: bold;
+        }
+        .info{
+            font-weight: bold;
+            color: #004E98;
+        }
+        h3{
+            color: #FF6700;
+            margin-top: 0;
+            margin-bottom: 1em;
+            font-size: 1.2em;
+        }
+
+        /*Request Status Page (RSP)  */
+        #tradiesTable {
+            /* border: 1px solid black; */
+            background-color: #fff;
+            width: 100%;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        #tradiesTable td {
+            padding: 0em;
+        }
+
+        #tradiesTable td:nth-child(2),
+        #tradiesTable td:nth-child(4) {
+            padding-left: 0.5em;
+        }
+
+        #tradiesTable td:nth-child(1),
+        #tradiesTable td:nth-child(3) {
+            text-align: right;
+        }
+
+        #tradiesTable td:nth-child(2),
+        #tradiesTable td:nth-child(4) {
+            text-align: left;
+        }
+
+        progress {
+            appearance: none;
+            background-color: transparent;
+            border: none;
+            width: 100%;
+            height: 1em;
+            border-radius: 50px;
+            overflow: hidden;
+            margin-bottom: 0.5em;
+        }
+
+        progress::-webkit-progress-bar {
+            background-color: transparent;
+            border-radius: 50px;
+        }
+
+        progress::-webkit-progress-value {
+            background-color: black;
+            border-radius: 50px;
+        }
+
+        progress::-moz-progress-bar {
+            background-color: black;
+            border-radius: 50px;
+        }
+
+        h5 {
+            margin-bottom: 0.2em; /* Add a custom top margin */
+        }
+
+        #status{
+            margin-bottom: -0.3em;
+        }
+
+        /* Tradie Info */
+
+        /* 1st design */
+        /* .tradie-info {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 2em;
+            gap: 1em;
+        } */
+
+        /* 2nd design */
+        .tradie-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2em;
+        }
+
+        /* 1st design */
+        /* .tradie-info-box {
+            background-color: #f2f2f2;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 1.5em;
+            width: 30%;
+            box-sizing: border-box;
+            min-width: 180px;
+        } */
+
+        /* 2nd design */
+        .tradie-info-box {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 1.5em;
+            width: 500px;
+            box-sizing: border-box;
+            margin-bottom: 1em;
+        }
+
+        p {
+            margin-bottom: 0;
+        }
+    </style>
+
+</head>
+<body>
+	<header>
+        <navButton onclick="toggleSidebar()">☰</navButton>
+		<!-- <a th:href="@{/client/home}"><button class="back-button">Back</button></a> -->
+		<div class="center">
+			<div class="logo">
+				<img src="/static/logoWhite.png" alt="Logo" style="margin:0;padding-right:5pt;">
+			</div>
+            <div class="title">
+                <h1>Hammer Time</h1>
+            </div>
+        </div>
+    </header>
+
+    <div class="sidebar" id="sidebar">
+        <a th:href="@{/client/home}">Home</a>
+        <a th:href="@{/client/account}">Account info</a>
+        <!-- <a th:href="@{/orders}">Orders</a> -->
+        <!-- <a th:href="@{/wallet}">Payment Methods</a> -->
+            <!-- <a th:href="@{/address}">Address</a> -->
+            <a th:href="@{/client/subscription}">Subscription</a>
+            <a th:href="@{/main}">Sign out</a>
+      </div>
+
+    <main onload="updateProgressBar()">
+        <div class="content">
+		
+            <div>
+                <h1 id="status"></h1>
+                <h5>Order Confirmed for April 20, 2023</h5>
+                <progress id="progressBar" max= 100></progress>
+            </div>
+
+            <div id="dynamicCont">
+
+
+            </div>
+    
+
+        </div>
+	</main>
+    
+    <footer>
+        <p>This is the footer.</p>
+    </footer>
+
+    </body>
+    </html>

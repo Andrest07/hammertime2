@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<head>
+	<title>Home Page</title>
+	<link rel="stylesheet" type="text/css" href="/static/style.css">
+
+	<style>
+		.jobPanel{
+			width: 220pt;
+			margin:auto;
+			background-color: #EBEBEB;
+			border-radius: 10pt;
+			padding:7pt;
+			display: inline-block;
+			border-bottom: 5px solid white;
+		}
+		.jobPanel:hover{
+			border-bottom: 5px solid #3A6EA5;
+			box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+		}
+		#container{
+			display: grid;
+  			grid-template-columns: repeat(3, 1fr); /* create 3 columns with equal width */
+  			grid-gap: 15pt;
+			text-align:center;
+
+		}
+	</style>
+
+
+    <script type="text/javascript" th:inline="javascript">
+		function toggleSidebar() {
+			var sidebar = document.getElementById("sidebar");
+			sidebar.classList.toggle("open");
+		}
+
+		function maxTLen(title){
+			var maxLength = 35;
+			if (title.length > maxLength) {
+				return title.substring(0, maxLength) + "...";
+			} else {
+				return title;
+			}
+		}
+
+		function convert() {
+			var xhr = new XMLHttpRequest();
+			xhr.open('GET', 'http://localhost:8080/dataRequest/jobs');
+			xhr.responseType = 'text';
+			xhr.onload = function() {
+				if (xhr.status === 200) {
+					var data = xhr.response;
+
+					let jsonString = data;
+					
+					// Sample JSON data
+					let jobsData = JSON.parse(data);
+					const jobList = document.getElementById("container");
+					jobsData.forEach(job => {
+						if (job.status === "ACCEPTED"){	
+						const jobPan = document.createElement("div");
+						jobPan.setAttribute('th:href', '/tradie/job?jobId='+job.id); //(id=' + job.id + ')
+						jobPan.innerHTML = `
+							<div class="jobPanel">
+								<image src="/static/insert-picture-icon.png" width="200" height="200pt"></image>
+								<p><strong>${maxTLen(job.title)}</strong></p>
+								Category: ${job.category}
+							</div>
+						`;
+
+						jobPan.addEventListener('click', function(event) {
+							// Prevent the default link behavior
+							event.preventDefault();
+						
+							// Handle the link click event here
+							// For example, you could redirect to the job page using window.location.href
+							window.location.href = jobPan.getAttribute('th:href');
+						});
+
+						jobList.appendChild(jobPan);
+					}});
+				}
+			};
+			xhr.send();
+
+			
+		 }
+		 convert();
+	</script>
+	<script type="text/javascript" src="/static/scripts/RequestJson.js"></script>
+</head>
+<body>
+	<header>
+        <navButton onclick="toggleSidebar()">☰</navButton>
+		<div class="center">
+            <div class="logo">
+				<img src="/static/logoWhite.png" alt="Logo" style="margin:0;padding-right:5pt;">
+			</div>
+			
+			<div class="title">
+				<h1> Hammer Time</h1>
+			</div>
+        </div>
+		</div>
+	</header>
+
+    <div class="sidebar" id="sidebar">
+		<a th:href="@{/tradie/home}">Home</a>
+		<a th:href="@{/tradie/account}">Account info</a>
+		<!-- <a th:href="@{/orders}">Orders</a> -->
+		<!-- <a th:href="@{/wallet}">Payment Methods</a> -->
+        <!-- <a th:href="@{/address}">Address</a> -->
+        <a th:href="@{/tradie/subscription}">Subscription</a>
+        <a th:href="@{/main}">Sign out</a>
+	</div>
+
+	<main>
+        <div class="content">
+		<h2>Welcome to Hammer Time!</h2>
+		<p>This is the home page of our website.</p>
+		<div id="container"></div>
+        </div>
+	</main>
+
+	<footer>
+		<p>This is the footer.</p>
+	</footer>
+</body>
+</html>

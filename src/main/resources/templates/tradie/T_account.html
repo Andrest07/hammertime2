@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+    <head>
+        <title>Account Page</title>
+        <link rel="stylesheet" type="text/css" href="/static/style.css">
+
+        <script>
+            function toggleSidebar() {
+                var sidebar = document.getElementById("sidebar");
+                sidebar.classList.toggle("open");
+            }
+
+
+            function getDBRequest(requestPath, responseMethod){
+                var xhr = new XMLHttpRequest();
+                xhr.open('GET', 'http://localhost:8080/dataRequest/' + requestPath);
+                xhr.responseType = 'text';
+
+                xhr.onload = function() {
+                    if (xhr.status === 200) {
+                        var data = xhr.response;
+                        let jsonData = JSON.parse(data);
+                        
+                        // User chosen Method
+                        responseMethod(jsonData);
+                    }
+                }
+                // Send Request To Database
+                xhr.send();
+            }
+
+
+
+        </script>
+
+        <style>
+            textarea {
+            width: 100%;
+            box-sizing: border-box;
+            resize: none;
+            height: 80px;
+            border-radius: 5px;
+            }
+            
+            body {
+            /* font-family: Arial, sans-serif; */
+            background-color: #f2f2f2;
+            } 
+            .Current_Order {
+                width: 75%;
+                border: 1px solid black;
+                padding: auto;
+                margin: auto;
+                background-color: #fff;
+                color: black;
+                border-radius: 10px;
+                box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <navButton onclick="toggleSidebar()">☰</navButton>
+\            <div class="center">
+                <div class="logo"><img src="/static/logoWhite.png" alt="Logo" style="margin:0;padding-right:5pt;"></div>
+                <div class="title"><h1>Hammer Time</h1></div>
+            </div>
+        </header> 
+        
+        <div class="sidebar" id="sidebar">
+            <a th:href="@{/tradie/home}">Home</a>
+            <a th:href="@{/tradie/account}">Account info</a>
+            <a th:href="@{/tradie/subscription}">Subscription</a>
+            <a th:href="@{/main}">Sign out</a>
+        </div>
+
+        <main>
+            <div class="content">
+                <h1>Account</h1>
+                            
+                <div class="header-container"><h2 id="C_U" style="text-align: center;">Applied Job</h2></div>
+                <div id="jobAccCont">
+
+                </div>
+
+
+
+                <div class="header-container"><h2 id="C_U" style="text-align: center;"> Job Request</h2></div>             
+                <div id="jobAppCont">
+                    
+                </div>
+
+
+
+                <div class="header-container"><h2 id="C_U" style="text-align: center;">Completed Jobs</h2></div>
+                <div id="jobFinCont">
+                    
+                </div> 
+        
+            </div>
+        
+        </main>
+    
+        <footer>
+            <p>This is the footer.</p>
+        </footer>
+
+    </body>
+</html>

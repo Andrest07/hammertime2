@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<head>
+	<title>Orders Page</title>
+	<link rel="stylesheet" type="text/css" href="/static/style.css">
+
+    <script>
+        function toggleSidebar() {
+                var sidebar = document.getElementById("sidebar");
+                sidebar.classList.toggle("open");
+            }
+    </script>
+
+    <style>
+        body {
+         /* font-family: Arial, sans-serif; */
+         background-color: #f2f2f2;
+        }
+        
+        form {
+         background-color: #fff;
+         border-radius: 10px;
+         padding: 20px;
+         width: 500px;
+         margin: 50px auto;
+         box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+         }
+
+        div.fieldbox {
+         display: none;
+         }
+
+        label {
+         margin-bottom: 10px;
+         display: block;
+         }
+
+        textarea, 
+        input[type="location"] {
+         width: 100%;
+         padding: 10px;
+         border-radius: 5px;
+         border: 1px solid #ccc;
+         margin-bottom: 20px;
+         box-sizing: border-box;
+         resize: none;
+         }
+
+        /* input[type="submit"] {
+         background-color: #ff6700;
+         color: white;
+         padding: 10px 20px;
+         border: none;
+         border-radius: 5px;
+         cursor: pointer;
+         }
+
+        input[type="submit"]:hover {
+         background-color: #3e8e41;
+         } */
+       /* Responsive Styles */
+        @media (max-width: 600px) {
+        form {
+         width: 90%;
+        }
+         }
+
+        input[type="text"],
+        select,
+        textarea {
+        width: 100%;
+        box-sizing: border-box;
+        }
+
+        select {
+         width: 100%;
+         padding: 10px;
+         border-radius: 5px;
+         border: 1px solid #ccc;
+         margin-bottom: 20px;
+         box-sizing: border-box;
+         }
+    
+        input[type="location"] {
+         width: 100%;
+         padding: 10px;
+         border-radius: 5px;
+         border: 1px solid #ccc;
+         margin-bottom: 20px;
+         box-sizing: border-box;
+         } 
+    </style>
+
+</head>
+<body>
+	<header>
+        <navButton onclick="toggleSidebar()">☰</navButton>
+        <!-- <a href="javascript:javascript:history.go(-1)"><button class="back-button">Back</button></a> -->
+		<!-- <a th:href="@{/home}"><button class="back-button">Back</button></a> -->
+		<div class="center">
+			<div class="logo">
+				<img src="/static/logoWhite.png" alt="Logo" style="margin:0;padding-right:5pt;">
+			</div>
+            <div class="title">
+                <h1>Hammer Time</h1>
+            </div>
+        </div>
+    </header>
+
+    <div class="sidebar" id="sidebar">
+        <a th:href="@{/client/home}">Home</a>
+        <a th:href="@{/client/account}">Account info</a>
+        <!-- <a th:href="@{/orders}">Orders</a> -->
+        <!-- <a th:href="@{/wallet}">Payment Methods</a> -->
+            <!-- <a th:href="@{/address}">Address</a> -->
+            <a th:href="@{/client/subscription}">Subscription</a>
+            <a th:href="@{/main}">Sign out</a>
+      </div>
+
+      <main>
+        <div class="content">
+            <h1>Welcome!</h1>
+      
+            <form action="/submit_request" method="post">
+                <h2 id="Request_Service_Header">Request Service</h2>
+                
+                <label for="job_title">Job Title:</label>
+                <textarea id="job_title" name="jobTitle" required></textarea>
+                <br><br>
+          
+                <label for="type_of_service">Type of Service:</label>
+                <select id="type_of_service" name="type_of_service">
+                  <option value="Carpentry">Carpentry</option>
+                  <option value="Electrical">Electrical</option>
+                  <option value="Plumbing">Plumbing</option>
+                  <option value="Hvac">Hvac</option>
+                  <option value="Painting">Painting</option>
+                  <option value="Roofing">Roofing</option>
+                  <option value="Masonry">Masonry</option>
+                  <option value="Landscaping">Landscaping</option>
+                  <option value="Contract">Contracting</option>
+                  <option value="Other">Other</option>
+                </select>   
+                <br><br>
+                
+                <label for="discription">Discription:</label>
+                <textarea id="discription" name="discription" required></textarea>
+                <br><br>
+                
+                <label for="image">Image:</label>
+                <input type="file" id="image" name="image" accept="image/*">
+                <br><br>
+            
+                <label for="location">Location:</label>
+                <input type="location" id="location" name="location" required>
+                <br><br>
+          
+               <!-- <input type="submit" value="Request Service"> -->
+               <a th:href="@{/client/confirm}"><button class="buttons">Request Service</button></a>
+              </form>
+              </div>
+              
+            </main>
+    
+            <footer>
+                <p>This is the footer.</p>
+            </footer>
+        
+            </body>
+            </html>              
+            

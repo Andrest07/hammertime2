@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="icon" type="image/x-icon" href="/static/logoWhite.png">
+	<title>Hammer Time</title>
+	<link rel="stylesheet" type="text/css" href="/static/style.css">
+</head>
+<body class="main">
+
+	<header>
+    <div class="center">
+      <div class="logo">
+        <img src="/static/logoWhite.png" alt="Logo" style="margin:0;padding-right:5pt;">
+      </div>
+      
+      <div class="title">
+        <h1>Hammer Time</h1>
+      </div>
+    </div>
+  </header>
+	
+
+    <main>
+        <div class="content">
+          <h1 class="main-text" style="margin-top:80pt;">Need a job complete?</br>HammerTime is for you</h1>
+          
+
+          <div class="button-container">
+            <!-- <a href="login.html"><button>Log in</button></a> -->
+            <a th:href="@{/login}"><button class="main-button">Log in</button></a>
+            <!-- <a href="signup.html"><button>Sign Up</button></a> -->
+            <a th:href="@{/signup}"><button class="main-button">Sign up</button></a>
+          </div>
+        </div>
+      </main>
+
+      <footer>
+        <p>This is the footer.</p>
+    </footer>
+
+</body>
+</html>

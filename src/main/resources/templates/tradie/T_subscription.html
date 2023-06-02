@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<head>
+	<title>Subscription Page</title>
+	<link rel="stylesheet" type="text/css" href="/static/style.css">
+	<script>
+		function toggleSidebar() {
+                var sidebar = document.getElementById("sidebar");
+                sidebar.classList.toggle("open");
+            }
+
+		function cancelSubscription() {
+			// HERE TO CANCEL
+		}
+	</script>
+	<style>
+		.subscribed-box, .not-subscribed-box{
+			margin: 5px;
+		}
+		#info, #subscription-dropdown{
+			color: #004E98;
+			font-weight: bold;
+		}
+	</style>
+</head>
+<body>
+	<header>
+		<navButton onclick="toggleSidebar()">☰</navButton>
+		<!-- <a href="javascript:javascript:history.go(-1)"><button class="back-button">Back</button></a> -->
+		<div class="center">
+			<div class="logo">
+				<img src="/static/logoPH.png" alt="Logo">
+			</div>
+			<div class="title">
+				<h1>Hammer Time</h1>
+			</div>
+		</div>
+	</header>
+
+	<div class="sidebar" id="sidebar">
+        <a th:href="@{/tradie/home}">Home</a>
+        <a th:href="@{/tradie/account}">Account info</a>
+        <!-- <a th:href="@{/orders}">Orders</a> -->
+        <!-- <a th:href="@{/wallet}">Payment Methods</a> -->
+            <!-- <a th:href="@{/address}">Address</a> -->
+            <a th:href="@{/tradie/subscription}">Subscription</a>
+            <a th:href="@{/main}">Sign out</a>
+      </div>
+	  
+	<main>
+		<div class="content">
+			<h2>Subscriptions</h2>
+			<!-- If user is subscribed -->
+            <fieldset class="subscribed-box">
+				<legend id="title">Membership Type</legend>
+				<span id="info">Annual</span>
+			</fieldset>
+            <fieldset class="subscribed-box">
+				<legend id="title">Validity</legend>
+				<span id="info">Valid till December 2023</span>
+			</fieldset>
+
+            <button onclick="cancelSubscription()" class="buttons">Cancel Subscription</button>
+
+        </br></br></br></br>
+
+			<!-- If user is not subscribed -->
+			<fieldset class="not-subscribed-box">
+				<legend>Membership Type</legend>
+				<select id="subscription-dropdown">
+					<option value="none">None</option>
+					<option value="annual">Annual</option>
+				</select>
+			</fieldset>
+            <!-- <button onclick="redirectToPayment()">Add Subscription</button> -->
+			<a th:href="@{/tradie/payments}"><button class="buttons">Add Subscription</button></a>
+		</div>
+	</main>
+
+	 <footer>
+		 <p>This is the footer.</p>
+	 </footer>
+    </body>
+    </html>

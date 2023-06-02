@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<head>
+	<title>Account Page</title>
+	<link rel="stylesheet" type="text/css" href="/static/style.css">
+
+    <script>
+        function toggleSidebar() {
+                var sidebar = document.getElementById("sidebar");
+                sidebar.classList.toggle("open");
+            }
+            /*const url = new URL(window.location.href);
+            const queryString = url.search.substr(1); // remove the '?' character
+            const params = queryString.split("&");
+            let clientId;
+            for (let i = 0; i < params.length; i++) {
+                const param = params[i].split("=");
+                if (param[0] === "jobId") {
+                    clientId = param[1];
+                    break;
+                }
+            } */
+
+
+                //Function to get client data
+            function getDBRequest(requestPath, responseMethod){
+                var xhr = new XMLHttpRequest();
+                xhr.open('GET', 'http://localhost:8080/dataRequest/' + requestPath);
+                xhr.responseType = 'text';
+
+                xhr.onload = function() {
+                    if (xhr.status === 200) {
+                        var data = xhr.response;
+                        let jsonData = JSON.parse(data);
+                        
+                        // User chosen Method
+                        responseMethod(jsonData);
+                    }
+                }
+                // Send Request To Database
+                xhr.send();
+            }
+             // Function to use client data
+             function getClient(clientJson){
+                document.getElementById("name").innerHTML = clientJson.fname + " " + clientJson.lname;
+                document.getElementById("email").innerHTML = clientJson.email;
+                document.getElementById("address").innerHTML = clientJson.address;
+                document.getElementById("phone").innerHTML = clientJson.phone;
+            }
+
+            function setClient(){
+                var xhr = new XMLHttpRequest();
+                xhr.open('GET', 'http://localhost:8080/dataRequest/who');
+                xhr.responseType = 'text';
+
+                xhr.onload = function() {
+                    if (xhr.status === 200) {
+                        var data = xhr.response;
+                        getDBRequest("client/" + data, getClient);
+                    }
+                }
+                // Send Request To Database
+                xhr.send();
+            }
+            setClient();
+
+           
+    </script>
+    <style>
+        #name, #email, #address, #phone{
+            color: #004E98;
+			font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+	<header>
+        <navButton onclick="toggleSidebar()">☰</navButton>
+		<div class="center">
+			<div class="logo">
+				<img src="/static/logoWhite.png" alt="Logo" style="margin:0;padding-right:5pt;">
+			</div>
+            <div class="title">
+                <h1>Hammer Time</h1>
+            </div>
+        </div>
+    </header>
+
+    <div class="sidebar" id="sidebar">
+        <a th:href="@{/client/home}">Home</a>
+        <a th:href="@{/client/account}">Account info</a>
+        <!-- <a th:href="@{/orders}">Orders</a> -->
+        <!-- <a th:href="@{/wallet}">Payment Methods</a> -->
+            <!-- <a th:href="@{/address}">Address</a> -->
+            <a th:href="@{/client/subscription}">Subscription</a>
+            <a th:href="@{/main}">Sign out</a>
+      </div>
+    
+    <main>
+        <div class="content">
+            <h1>Your Account Details</h1>
+            <br>
+        
+            <fieldset class="Name">
+                <legend>Full name</legend>
+                <span id ="name"></span>
+            </fieldset> <br>
+
+            <fieldset class="Email">
+                <legend>Email</legend>
+                <span id="email"></span>
+            </fieldset>  <br>
+
+            <fieldset class="Address">
+                <legend>Address</legend>
+                <span id="address"></span>
+            </fieldset> <br>
+
+            <fieldset class="Phone">
+                <legend>Phone number</legend>
+                <span id="phone"></span>
+            </fieldset> <br>
+        </div>
+
+    </body>
+    </html>

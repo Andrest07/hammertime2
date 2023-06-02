@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<head>
+	<title>Subscription Page</title>
+	<link rel="stylesheet" type="text/css" href="/static/style.css">
+	<script>
+		var clientID = "";
+		function setClient(myMeth){
+                var xhr = new XMLHttpRequest();
+                xhr.open('GET', 'http://localhost:8080/dataRequest/who');
+                xhr.responseType = 'text';
+
+                xhr.onload = function() {
+                    if (xhr.status === 200) {
+                        var data = xhr.response;
+                        myMeth(data);
+                    }
+                }
+                // Send Request To Database
+                xhr.send();
+            }
+            setClient(startWithID);
+			
+
+		
+
+
+		function toggleSidebar() {
+                var sidebar = document.getElementById("sidebar");
+                sidebar.classList.toggle("open");
+            }
+
+		function cancelSubscription() {
+			// HERE TO CANCEL
+		}
+
+
+		function getDBRequest(requestPath, responseMethod){
+                var xhr = new XMLHttpRequest();
+                xhr.open('GET', 'http://localhost:8080/dataRequest/' + requestPath);
+                xhr.responseType = 'text';
+
+                xhr.onload = function() {
+                    if (xhr.status === 200) {
+                        var data = xhr.response;
+                        let jsonData = JSON.parse(data);
+                        
+                        // User chosen Method
+                        responseMethod(jsonData);
+                    }
+                }
+                // Send Request To Database
+                xhr.send();
+            }
+
+
+
+			
+
+			
+
+			function getMem(subDate) {
+			const date = new Date();
+			var isSubscribed = Date.parse(subDate.memberEnd) > date;
+			var subscribedBox = document.getElementById("subscribed-box");
+			var validityBox = document.getElementById("validity-box");
+			var notSubscribedBox = document.getElementById("not-subscribed-box");
+			var addSubscriptionButton = document.getElementById("add-subscription-button");
+			var cancelSubscriptionButton = document.getElementById("cancel-subscription-button");
+
+			if (isSubscribed) {
+				subscribedBox.style.display = "block";
+				validityBox.style.display = "block";
+				notSubscribedBox.style.display = "none";
+				addSubscriptionButton.style.display = "none";
+				cancelSubscriptionButton.style.display = "block";
+			} else {
+				subscribedBox.style.display = "none";
+				validityBox.style.display = "none";
+				notSubscribedBox.style.display = "block";
+				addSubscriptionButton.style.display = "block";
+				cancelSubscriptionButton.style.display = "none";
+			}
+		}
+		// anything that uses client ID
+		function startWithID(clientID){
+			getDBRequest("client/" + clientID, getMem);	
+		}
+
+		
+
+
+	</script>
+	<style>
+		.subscribed-box, .not-subscribed-box{
+			margin: 5px;
+		}
+		#info, #subscription-dropdown{
+			color: #004E98;
+			font-weight: bold;
+		}
+	</style>
+</head>
+<body>
+	<header>
+		<navButton onclick="toggleSidebar()">☰</navButton>
+		<div class="center">
+			<div class="logo">
+				<img src="/static/logoPH.png" alt="Logo">
+			</div>
+			<div class="title">
+				<h1>Hammer Time</h1>
+			</div>
+		</div>
+	</header>
+
+	<div class="sidebar" id="sidebar">
+        <a th:href="@{/client/home}">Home</a>
+        <a th:href="@{/client/account}">Account info</a>
+            <a th:href="@{/client/subscription}">Subscription</a>
+            <a th:href="@{/main}">Sign out</a>
+      </div>
+	  
+	<main>
+		<div class="content">
+		<span id="date"></span>
+			<h2>Subscriptions</h2>
+			<!-- If user is subscribed -->
+			<fieldset id="subscribed-box" class="subscribed-box">
+				<legend id="title">Membership Type</legend>
+				<span id="info">Annual</span>
+			</fieldset>
+			<fieldset id="validity-box" class="subscribed-box">
+				<legend id="title">Validity</legend>
+				<span id="info">Valid till December 2023</span>
+			</fieldset>
+			<button id="cancel-subscription-button" onclick="cancelSubscription()" class="buttons">Cancel Subscription</button>
+
+			<!-- If user is not subscribed -->
+			<fieldset id="not-subscribed-box" class="not-subscribed-box">
+				<legend>Membership Type</legend>
+				<select id="subscription-dropdown">
+					<option value="none">None</option>
+					<option value="annual">Annual</option>
+				</select>
+			</fieldset>
+			<a th:href="@{/client/payments}"><button id="add-subscription-button" class="buttons" style="text-decoration: none !important;">Add Subscription</button></a>
+		</div>
+	</main>
+
+	 <footer>
+		 <p>This is the footer.</p>
+	 </footer>
+    </body>
+    </html>

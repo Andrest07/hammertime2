@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<head>
+	<title>Orders Page</title>
+	<link rel="stylesheet" type="text/css" href="/static/style.css">
+
+    <script>
+        function toggleSidebar() {
+                var sidebar = document.getElementById("sidebar");
+                sidebar.classList.toggle("open");
+            }
+
+       function maxTLen(title){
+			var maxLength = 35;
+			if (title.length > maxLength) {
+				return title.substring(0, maxLength) + "...";
+			} else {
+				return title;
+			}
+		}
+
+		// function convert() {
+		// 	var xhr = new XMLHttpRequest();
+		// 	xhr.open('GET', 'http://localhost:8080/dataRequest/jobs');
+		// 	xhr.responseType = 'text';
+		// 	xhr.onload = function() {
+		// 		if (xhr.status === 200) {
+		// 			var data = xhr.response;
+
+		// 			let jsonString = data;
+					
+		// 			// Sample JSON data
+		// 			let jobsData = JSON.parse(data);
+		// 			const jobList = document.getElementById("container");
+		// 			jobsData.forEach(job => {
+		// 				const jobPan = document.createElement("div");
+		// 				jobPan.setAttribute('th:href', '/client/job?jobId='+job.id); //(id=' + job.id + ')
+		// 				jobPan.innerHTML = `
+    //              <div >
+    //             <table class="Current_Order" >
+    //               <tr>
+    //                 <td><img src="/static/logoPH.png" height="100px" width="100px"></td>
+    //               <td>
+    //                 <table>
+    //                 <tr><td id="jobTitle">${maxTLen(job.title)}</td></tr>
+    //                 <tr><td>DD/MM/YYYY</td></tr>
+    //                 <tr><td id="jobCategory">${maxTLen(job.category)}</td></tr>
+    //                 <tr><td>$XXX</td></tr>
+    //                 <tr><td>Order Number: <span id="jobID">${maxTLen(job.id)}</span></td></tr>
+    //               </table>
+    //             </td>
+    //             <td><button class="status-button" id="jobStatus">${maxTLen(job.status)}</button></td>
+    //             <td>
+    //               <a th:href="@{/client/job}" ><button class="forward"><img src="/static/arrow-01.svg"></button></a>
+    //             </td>
+    //           </tr>
+    //             </table>
+    //         </div>
+    //                       `;
+
+    //                       jobPan.addEventListener('click', function(event) {
+		// 					// Prevent the default link behavior
+		// 					event.preventDefault();
+						
+		// 					// Handle the link click event here
+		// 					// For example, you could redirect to the job page using window.location.href
+		// 					window.location.href = jobPan.getAttribute('th:href');
+		// 				});
+
+		// 				jobList.appendChild(jobPan);
+		// 			});
+		// 		}
+		// 	};
+		// 	xhr.send();
+		//  }
+		//  convert();
+     
+            function getDBRequest(requestPath, responseMethod){
+                var xhr = new XMLHttpRequest();
+                xhr.open('GET', 'http://localhost:8080/dataRequest/' + requestPath);
+                xhr.responseType = 'text';
+
+                xhr.onload = function() {
+                    if (xhr.status === 200) {
+                        var data = xhr.response;
+                        let jsonData = JSON.parse(data);
+                        
+                        // User chosen Method
+                        responseMethod(jsonData);
+                    }
+                }
+                // Send Request To Database
+                xhr.send();
+              }
+
+              
+            // Function to use job data
+            function getJob(jobJson){
+
+              const myContent = document.getElementById("container");
+
+              for(let i= 0; i<jobJson.length; i++){
+                var job = jobJson[i];
+
+
+                const sercretDiv = document.createElement("div");
+
+                sercretDiv.innerHTML += `
+                  <table class="Current_Order" >
+                    <tr>
+                      <td><img src="/static/logoPH.png" height="100px" width="100px"></td>
+                      <td>
+                        <table>
+                        <tr><td id="jobTitle">${job.title}</td></tr>
+                        <tr><td>DD/MM/YYYY</td></tr>
+                        <tr><td id="jobCategory">${job.category}</td></tr>
+                        <tr><td>$XXX</td></tr>
+                        <tr><td>Order Number: <span id="jobID">${job.id}</span></td></tr>
+                      </table>
+                    </td>
+                    <td><button class="status-button" id="jobStatus">${job.status}</button></td>
+                    <td>
+                      <a th:href="@{/client/job}" ><button class="forward"><img src="/static/arrow-01.svg"></button></a>
+                    </td>
+                  </tr>
+                </table>
+                `;
+
+                sercretDiv.setAttribute('th:href', '/client/job?jobId='+job.id);
+
+                sercretDiv.addEventListener('click', function(event) {
+                  // Prevent the default link behavior
+                  event.preventDefault();
+                
+                  // Handle the link click event here
+                  // For example, you could redirect to the job page using window.location.href
+                  window.location.href = sercretDiv.getAttribute('th:href');
+                });
+    
+
+
+
+                myContent.appendChild(sercretDiv);
+             
+              }
+
+
+                // document.getElementById("jobTitle").innerHTML = jobJson.title;
+                // document.getElementById("jobStatus").innerHTML = jobJson.status;
+                // document.getElementById("jobCategory").innerHTML = "Category: " + jobJson.category;
+                // document.getElementById("jobID").innerHTML = jobJson.id;
+                /*
+                  Get Jobs by Client ID
+
+                  Job Status (Pending/Accepting/InProgress)
+                  Job Category (Service Type)
+                  Job ID (Order #)
+
+                */
+             }
+
+
+             var clientID;
+            function getClient(c){
+              clientID = c; 
+              getDBRequest("jobs/clientId/" + clientID, getJob);
+            }
+
+            getDBRequest('who', getClient);
+            
+      </script>
+      <style>
+        .forward{
+            background-color: #3A6EA5;
+            color: white;
+            border: none;
+            padding: 5px;
+            font-size: 31px;
+            height: 40px;
+            width: 40px;
+            /* box-shadow: 0 2px 4px black; */
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-radius: 70%;
+            /* font-weight: bold; */
+          }
+        .forward:active{
+          /* background-color: #C0C0C0; */
+          /* box-shadow: 0 0 2px black; */
+          box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+          transform: translateY(2px);
+        }
+        .forward:not(:first-child) {
+          margin-top: 10px;
+        }
+        #jobTitle{
+          font-weight: bold;
+          font-size: 24px;
+        }
+
+        /* ClinetHomePage by Kim */
+        .Current_Order {
+            width: 75%;
+            /* border: 2px solid black; */
+            padding: auto;
+            margin: auto;
+            background-color: #fff;
+            color: black;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        #jobStatus{
+            border-radius:5px;
+            background-color: #FF6700;
+            color: #fff;
+            /* font-weight: bold; */
+        }
+
+        #Past_Order {
+            text-align: center;
+            margin-top: 50px; /* adjust the value as needed to center the element vertically */
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #Make_a_Request {
+            margin-right: 100px;
+            margin-left: -200px;
+
+        } 
+        /* Css for Request Service page */
+        #Request_Service_Header {
+            text-align: center;
+            margin-top: 50px; 
+        }
+
+        .status-button{
+            border-radius: 5px;
+            background: #FF6700;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            /* font-size: 2em; */
+        }
+      </style>
+</head>
+<body>
+	<header>
+        <navButton onclick="toggleSidebar()">☰</navButton>
+		<!-- <a th:href="@{/home}"><button class="back-button">Back</button></a> -->
+		<div class="center">
+			<div class="logo">
+				<img src="/static/logoWhite.png" alt="Logo" style="margin:0;padding-right:5pt;">
+			</div>
+            <div class="title">
+                <h1>Hammer Time</h1>
+            </div>
+        </div>
+    </header>
+
+    <div class="sidebar" id="sidebar">
+        <a th:href="@{/client/home}">Home</a>
+        <a th:href="@{/client/account}">Account info</a>
+        <!-- <a th:href="@{/orders}">Orders</a> -->
+        <!-- <a th:href="@{/wallet}">Payment Methods</a> -->
+            <!-- <a th:href="@{/address}">Address</a> -->
+            <a th:href="@{/client/subscription}">Subscription</a>
+            <a th:href="@{/main}">Sign out</a>
+      </div>
+
+    <main>
+        <div class="content">
+            <h1>Welcome!</h1>
+            
+            <!-- <p>Click <a th:href="@{/hello}">here</a> to see a greeting.</p> -->
+            
+            <div class="header-container">
+              <h2 id="C_U" style="text-align: center; flex-grow: 1;">Orders</h2>
+              <div id="Kim_table">
+                <a th:href="@{/client/request}" > 
+                <button id="Make_a_Request" class="buttons">Make a request</button>
+                </a>
+              </div>
+            </div>
+          <div id="container"></div>
+	</main>
+    
+    <footer>
+        <p>This is the footer.</p>
+    </footer>
+
+    </body>
+    </html>

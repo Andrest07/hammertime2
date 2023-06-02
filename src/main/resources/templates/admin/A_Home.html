@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+    <head>
+        <style>
+            body{
+                display: grid;
+                grid-template-columns: repeat(5, 1fr);
+            }
+        </style>
+    </head>
+    <body>
+        <div>
+            <h2>Shared Pages</h2><br/>
+            <ul>
+                <li><a th:href="@{/main}">Main Page</a></li>
+                <li><a th:href="@{/login}">Login</a></li>
+                <li><a th:href="@{/signup}">Signup</a></li>
+            </ul>
+        </div>
+        <div>
+            <h2>Tradie Pages</h2><br/>
+            <ul>
+                <li><a th:href="@{/tradie/home}">Home</a></li>
+                <li><a th:href="@{/tradie/account}">Account</a></li>
+                <li><a th:href="@{/tradie/job}">Job</a></li>
+            </ul>
+        </div>
+        <div>
+            <h2>Client Pages</h2><br/>
+            <ul>
+                <li><a th:href="@{/client/home}">Home</a></li>
+                <li><a th:href="@{/client/account}">Account</a></li>
+                <li><a th:href="@{/client/job}">Job</a></li>
+                <li><a th:href="@{/client/review}">Review</a></li>
+            </ul>
+        </div>
+        <div>
+            <h2>Admin Pages</h2><br/>
+            <ul>
+                <li><a th:href="@{/admin/home}">Home</a></li>
+            </ul>
+        </div>
+        <div>
+            <h2>UNSORTED</h2></li>
+            <ul>
+                <li><a th:href="@{/payments}">Payments</a></li>
+                <li><a th:href="@{/subscription}">subscription</a></li>
+                <li><a th:href="@{/upload}">Image Upload Demo</a></li>
+                <li><a th:href="@{/dataRequest/images}">dataRequest/images</a></li>
+            </ul>
+        </div>
+        <div>
+            <h2>Client Requests</h2></li>
+            <ul>
+                <li><a th:href="@{/dataRequest/clients}">Get all clients - /dataRequest/clients</a></li>
+                <li><a th:href="@{/dataRequest/clients/ids}">Get all clients IDs - /dataRequest/clients/ids</a></li>
+                <li><a th:href="@{/dataRequest/client/20}">Get client by ID - /dataRequest/client/{id}</a></li>
+            </ul>
+        </div>
+        <div>
+            <h2>Professional Requests</h2></li>
+            <ul>
+                <li><a th:href="@{/dataRequest/professionals}">Get all professionals - /dataRequest/professionals</a></li>
+                <li><a th:href="@{/dataRequest/professionals/ids}">Get all professionals IDs - /dataRequest/professionals/ids</a></li>
+                <li><a th:href="@{/dataRequest/professional/50}">Get professionals by ID - /dataRequest/professional/{id}</a></li>
+            </ul>
+        </div>
+        <div>
+            <h2>Job Requests</h2></li>
+            <ul>
+                <li><a th:href="@{/dataRequest/jobs}">Get all jobs - /dataRequest/jobs</a></li>
+                <li><a th:href="@{/dataRequest/jobs/ids}">Get all jobs IDs - /dataRequest/jobs/ids</a></li>
+                <li><a th:href="@{/dataRequest/jobs/id/50}">Get jobs by ID - /dataRequest/professional/{id}</a></li>
+                <li><a th:href="@{/dataRequest/jobs/professionalId/50}">Get jobs by professional ID - /dataRequest/jobs/professionalId/{id}</a></li>
+                <li><a th:href="@{/dataRequest/jobs/clientId/50}">Get jobs by client ID - /dataRequest/jobs/clientId/{id}</a></li>
+            </ul>
+        </div>
+        <div>
+            <h2>Transaction Requests</h2></li>
+            <ul>
+                <li><a th:href="@{/dataRequest/transactions}">Get all transactions - /dataRequest/transactions</a></li>
+                <li><a th:href="@{/dataRequest/transactions/id/1}">Get transaction by ID - /dataRequest/transactions/{id}</a></li>
+            </ul>
+        </div>
+        <div>
+            <h2>Rating Requests</h2></li>
+            <ul>
+                <li><a th:href="@{/dataRequest/ratings}">Get all ratings - /dataRequest/ratings</a></li>
+                <li><a th:href="@{/dataRequest/ratings/ids}">Get all ratings IDs - /dataRequest/ratings/ids</a></li>
+                <li><a th:href="@{/dataRequest/rating/id/50}">Get rating by ID - /dataRequest/rating/{id}</a></li>
+            </ul>
+        </div>
+    </body>
+</html>
