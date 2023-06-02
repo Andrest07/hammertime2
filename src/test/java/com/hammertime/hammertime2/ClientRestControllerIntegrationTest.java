@@ -37,7 +37,7 @@ import com.hammertime.hammertime2.service.IBackendService;
 @ActiveProfiles("test")
 @RunWith(SpringRunner.class)
 @SpringBootTest(
-  webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT,
+  webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
   classes = Hammertime2Application.class)
 @AutoConfigureMockMvc
 @EnableAutoConfiguration

@@ -7,8 +7,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.junit4.SpringRunner;
 
-@ComponentScan({"com"})
-@EntityScan({"com"})
 @RunWith(SpringRunner.class)
 @SpringBootTest(
   webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT,
